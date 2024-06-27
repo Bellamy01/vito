@@ -137,7 +137,7 @@ def main():
     ok_sign_count = 0
 
     # Initialize serial communication
-    ser = serial.Serial('/dev/cu.usbmodem1301', 9600)  # Replace 'COM12' with your actual serial port
+    # ser = serial.Serial('/dev/cu.usbmodem1301', 9600)  # Replace 'COM12' with your actual serial port
     
     while True:
         ret, frame = cam.read()
@@ -223,7 +223,7 @@ def main():
                     cart_details += f"{item_name}: {item_count}\n"
 
                 # Send cart details via Serial
-                ser.write(cart_details.encode())
+                # ser.write(cart_details.encode())
                 print("Data sent successfully via Serial")
         
         if results.multi_hand_landmarks:

@@ -112,8 +112,8 @@ if len(faces) > 0:
 
             cv2.putText(image, f"Generating image {image_count+1}", (x, y - fontBottomMargin), fontFace, fontScale, fontColor, fontWeight)
 
-            # Check if enough time has passed to capture an image and if image count is less than 50
-            if (time.time() - current_time) * 1000 >= interval and image_count < 50:
+            # Check if enough time has passed to capture an image and if image count is less than 100
+            if (time.time() - current_time) * 1000 >= interval and image_count < 100:
                 # Generate filename without spaces
                 image_name = f"data.{customer_uid}_{image_count+1}.jpg"
                 image_path = os.path.join('dataset', image_name)
@@ -135,8 +135,8 @@ if len(faces) > 0:
         # Display the video frame with rectangle
         cv2.imshow("Dataset Generating...", image)
 
-        # To stop taking video, press 'q' key or if image count reaches 50
-        if cv2.waitKey(1) & 0xFF == ord('q') or image_count >= 50:
+        # To stop taking video, press 'q' key or if image count reaches 100
+        if cv2.waitKey(1) & 0xFF == ord('q') or image_count >= 100:
             break
 
 # Release the camera and close all windows
