@@ -274,10 +274,10 @@ def main():
                 mp_drawing.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
         
         # Display the OK sign count on the frame (smaller and in a different color)
-        cv2.putText(frame, f"Items in Cart: {ok_sign_count}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 1)
+        cv2.putText(frame, f"Items in Cart: {ok_sign_count}", (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
 
         # Display the total on the frame
-        cv2.putText(frame, f"\n\nTotal: ${total_price:.2f}", (10, frame.shape[0]-60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+        cv2.putText(frame, f"Total: ${total_price:.2f}", (10, frame.shape[0]-60), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (0, 255, 255), 2)
      
         
         # Display "Added" notification
@@ -294,5 +294,6 @@ def main():
     # ser.close()
 
 if __name__ == '__main__':
+    # add_ok_sign_column()
     create_cart_table()
     main()
