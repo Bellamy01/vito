@@ -126,6 +126,16 @@ def detect_ok_sign(image, hand_landmarks):
                 return True
     return False
 
+def add_ok_sign_column():
+    try:
+        conn = sqlite3.connect('customer_faces_data.db')
+        cursor = conn.cursor()
+        cursor.execute("ALTER TABLE customers ADD COLUMN ok_sign_detected INTEGER DEFAULT 0")
+        conn.commit()
+        print("Column 'ok_sign_detected' added successfully.")
+    except sqlite3.OperationalError as e:
+        print(f"SQLite error: {e}")
+
 def fetch_cart_details(customer_id):
     conn = sqlite3.connect('customer_faces_data.db')
     cursor = conn.cursor()
