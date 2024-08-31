@@ -93,14 +93,29 @@ def add_item_to_cart(customer_id, item_name, item_price):
     return new_count
 
 def get_customer_name(predicted_id):
-    conn = sqlite3.connect('customer_faces_data.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT customer_name FROM customers WHERE customer_uid = ?", (predicted_id,))
-    result = cursor.fetchone()
-    conn.close()
-    if result:
-        return result[0]
-    else:
+    # conn = sqlite3.connect('customer_faces_data.db')
+    # cursor = conn.cursor()
+    # cursor.execute("SELECT customer_name FROM customers WHERE customer_uid = ?", (predicted_id,))
+    # result = cursor.fetchone()
+    # conn.close()
+    # if result:
+    #     return result[0]
+    # else:
+    #     return "Unknown"
+
+    # update the code to catch the exception where customer is not found
+    try:
+        conn = sqlite3.connect('customer_faces_data.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT customer_name FROM customers WHERE customer_uid = ?", (predicted_id,))
+        result = cursor.fetchone()
+        conn.close()
+        if result:
+            return result[0]
+        else:
+            return "Unknown"
+    except Exception as e:
+        print(f"Error: {e}")
         return "Unknown"
 
 def update_ok_sign_detected(predicted_id, ok_sign_detected):
@@ -137,18 +152,53 @@ def add_ok_sign_column():
         print(f"SQLite error: {e}")
 
 def fetch_cart_details(customer_id):
-    conn = sqlite3.connect('customer_faces_data.db')
-    cursor = conn.cursor()
+    # conn = sqlite3.connect('customer_faces_data.db')
+    # cursor = conn.cursor()
 
-    cursor.execute("SELECT customer_name FROM customers WHERE customer_uid = ?", (customer_id,))
-    customer_name = cursor.fetchone()[0]
+    # cursor.execute("SELECT customer_name FROM customers WHERE customer_uid = ?", (customer_id,))
+    # customer_name = cursor.fetchone()[0]
 
-    cursor.execute("SELECT item_name, item_count, item_price FROM carty WHERE customer_uid = ?", (customer_id,))
-    cart_items = cursor.fetchall()
+    # cursor.execute("SELECT item_name, item_count, item_price FROM carty WHERE customer_uid = ?", (customer_id,))
+    # cart_items = cursor.fetchall()
 
-    conn.close()
+    # conn.close()
 
-    return customer_name, cart_items
+    # return customer_name, cart_items
+
+    # update the code to catch the exception if cart details are not found
+    try:
+        # conn = sqlite3.connect('customer_faces_data.db')
+        # cursor = conn.cursor()
+
+        # cursor.execute("SELECT customer_name FROM customers WHERE customer_uid = ?", (customer_id,))
+        # customer_name = cursor.fetchone()[0]
+
+        # cursor.execute("SELECT item_name, item_count, item_price FROM carty WHERE customer_uid = ?", (customer_id,))
+        # cart_items = cursor.fetchall()
+
+        # conn.close()
+
+        # return customer_name, cart_items 
+
+        # Before fetching customer name, check if the customer exists
+        conn = sqlite3.connect('customer_faces_data.db')
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT customer_name FROM customers WHERE customer_uid = ?", (customer_id,))
+        result = cursor.fetchone()
+        if result:
+            customer_name = result[0]
+
+            cursor.execute("SELECT item_name, item_count, item_price FROM carty WHERE customer_uid = ?", (customer_id,))
+            cart_items = cursor.fetchall()
+
+            conn.close()
+
+            return customer_name, cart_items
+        else:
+            return "Unknown", []
+    except Exception as e:
+        print(f"SQLite error: {e}")
 
 def main():
     faceRecognizer = cv2.face.LBPHFaceRecognizer_create()
@@ -169,7 +219,7 @@ def main():
     sunglasses_change_interval = 8  # 8 seconds delay
     last_added_sunglasses = ""
 
-    ser = serial.Serial('/dev/cu.usbmodem1201', 9600)  # Replace with your actual serial port
+    # ser = serial.Serial('/dev/cu.usbmodem1201', 9600)  # Replace with your actual serial port
     
     while True:
         ret, frame = cam.read()
@@ -184,7 +234,7 @@ def main():
             roi_gray = gray[y:y + h, x:x + w]
             id_, conf = faceRecognizer.predict(roi_gray)
             
-            if conf >= 45:
+            if conf >= 65:
                 customer_name = get_customer_name(id_)
                 label = f"{customer_name} - {round(conf, 2)}%"
             else:
@@ -265,8 +315,8 @@ def main():
                 print(cart_details)
 
                 # Send cart details via Serial
-                ser.write(cart_details.encode())
-                print("Data sent successfully via Serial")
+                # ser.write(cart_details.encode())
+                # print("Data sent successfully via Serial")
 
                    
         if results.multi_hand_landmarks:
@@ -295,5 +345,5 @@ def main():
 
 if __name__ == '__main__':
     # add_ok_sign_column()
-    create_cart_table()
+    # create_cart_table()
     main()
